@@ -2,7 +2,7 @@
 # include <fstream>
 # include <time.h>
 
-# define DOC_NUM 10
+# define DOC_NUM 1000
 # define DOC_LEN 500
 using namespace std;
 
@@ -35,6 +35,7 @@ string geneOtherDoc(string base_doc) {
 		c = 'a' + rand() % 26;
 	}
 	base_doc[idx] = c;
+//	cout << idx << " " << c << " ";
 	return base_doc;
 }
 
@@ -50,8 +51,9 @@ int main(){
 //	generate the rest doc
 	string base_doc = doc0;
 	for(int i = 1; i < DOC_NUM; i++) {
-		string doc = geneOtherDoc(base_doc);  // base_doc changes
+		string doc = geneOtherDoc(base_doc); 
 		doc_ofs << doc << endl;
+		base_doc = doc;
 	}
 	
 	doc_ofs.close();
