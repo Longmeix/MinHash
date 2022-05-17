@@ -2,7 +2,7 @@
 # include <vector>
 # include <fstream>
 # define K 8  // k-shingles
-# define DOC_NUM 10
+# define DOC_NUM 1000
 # define DOC_LEN 500
 using namespace std;
 
