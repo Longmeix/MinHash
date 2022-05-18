@@ -6,7 +6,7 @@
 
 # define K 8  // k-shingles
 # define MAXROW 4294967296
-# define DOC_NUM 200
+# define DOC_NUM 1000
 # define DOC_LEN 500
 # define HASH_NUM 30
 # define EPOCH 1000
@@ -42,6 +42,7 @@ void geneSignatureMat() {
 	for(int hi = 0; hi < HASH_NUM; hi++) {  // disorder row by hashing
 		HashFunc hFunc;
 //		cout << hFunc.a << " " << hFunc.b << endl;
+//		signatureMat[HASH_NUM][DOC_NUM] = {UINT_MAX};
 		for(int d = 0; d < DOC_NUM; d++) {  // each document
 			unsigned int min_hash_row = UINT_MAX;
 //			find the minimum row index from 1'rows
@@ -66,7 +67,7 @@ bool hasEqualBand(int d0, int d1, int start, int end) {
 }
 
 bool isCollide(int d0, int d1, int band, int row) {
-	for(int b = 0; b < band - 1; b++) {
+	for(int b = 0; b < band; b++) {
 		bool same = hasEqualBand(d0, d1, b*row, (b+1)*row);
 		if(same == true) {
 			return true;
@@ -106,13 +107,8 @@ int main() {
 	for(int bi = 0; bi < sizeof(BAND) / sizeof(int); bi++) {
 		int band = BAND[bi];
 		int row = HASH_NUM / band;
-		cout<< "1" << endl;
-		for(int d0 = 0; d0 < DOC_NUM; d0++) {
-				for(int d1 = d0 + 1; d1 < DOC_NUM; d1++) {
-					collision[d0][d1] = 0;
-				}
-			}
-		cout<< "he" << endl;
+		cout<< bi << endl;
+		memset(collision, 0, sizeof(collision));
 		
 	//	Local sensitive hashing
 		for(int e = 0; e < EPOCH; e++) {
