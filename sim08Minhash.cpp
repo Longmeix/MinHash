@@ -222,12 +222,13 @@ double JaccardSimilarity(int d0, int d1) {
 	set_intersection(d0_shg.begin(), d0_shg.end(), d1_shg.begin(), d1_shg.end(),inserter(andset, andset.begin()));
 	set_union(d0_shg.begin(), d0_shg.end(), d1_shg.begin(), d1_shg.end(),inserter(orset, orset.begin()));
 	double similarity = 1.0 * andset.size() / orset.size();
+	cout << andset.size() << " " << orset.size() << endl;
 	
 	return similarity;
 }
 
 int main(){
-	srand(2022);
+	srand(1);
 //	1. generate documents
 	string doc_path = "doc0.8.txt";
 	ofstream doc_ofs(doc_path);  // write stream
@@ -244,17 +245,12 @@ int main(){
 //	string doc;
 	for(int d = 0; d < DOC_NUM; d++) {  // for each ducument
 		getline(doc_read, doc);
-		cout << d << endl;
 		for(int i = 0; i <= doc.length() - K; i++) {
-//			string subDoc = doc.substr(i, K);  // sub string with length K=8
-//			cout << i << endl;
-//			cout << subDoc << endl;
+			string subDoc = doc.substr(i, K);  // sub string with length K=8
 			char c_subDoc[K];
-//			strcpy(c_subDoc, subDoc.c_str());
-			c_subDoc = doc.substr(i, K);
-//			unsigned int intShingle = CRC32(c_subDoc, sizeof(c_subDoc) / sizeof(char));
-//			shingleMat[i][d] = intShingle;
-//			cout << shingleMat[i][d] << endl;
+			strcpy(c_subDoc, subDoc.c_str());
+			unsigned int intShingle = CRC32(c_subDoc, sizeof(c_subDoc) / sizeof(char));
+			shingleMat[i][d] = intShingle;
 		}	
 	}
 	doc_read.close();
@@ -263,6 +259,7 @@ int main(){
 //	3. signature matrix and calculate results
 	int d0 = 0;
 	int d1 = 1;
+	double jaccard = JaccardSimilarity(d0, d1);
 	for(int bi = 0; bi < sizeof(BAND) / sizeof(int); bi++) {
 		int band = BAND[bi];
 		int row = HASH_NUM / band;
@@ -274,11 +271,8 @@ int main(){
 				collision += 1;
 			}		
 		}
-		
-//		cout << "a" << endl;
-		
+
 		double exper_prob = 1.0 * collision / EPOCH;
-		double jaccard = JaccardSimilarity(d0, d1);
 		double theory_prob = 1 - pow(1 - pow(jaccard, row), band);
 		
 		cout << "(" <<   d0 << "," << d1 << ") ";
@@ -286,8 +280,6 @@ int main(){
 		cout << "similarity = " << 100 * jaccard << "%\t";
 		cout << "prediction = " << 100 * theory_prob << "%\n";
 	}
-	
-	
 	
 	return 0;
 }
